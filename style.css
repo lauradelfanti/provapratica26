@@ -21,7 +21,7 @@
 
 :root {
     --font-body:"Mona Sans";
-    --color-black: #000;
+    --color-black: #132246;
     --color-white: #fff;
     --color-border-muted: #191f18;
     --color-muted: #A4AEA6;
@@ -31,13 +31,13 @@
     --font-mono: "Mona Sans Mono";
     --heading-1-font-size: 56px;
     --heading-1-line-height: 1.1;
-    --eyebrow-font-size: 14px;
+    --eyebrow-font-size: 14px; 
     --text-200-font-size: 16px;
     --text-200-line-height: 1.5;
-    --color-button-primary-bg: #08872B;
+    --color-button-primary-bg: #6A96AC;
     --color-button-secondary-bg: rgba(255, 255, 255, 0.12);
     --color-button-secondary-border: rgba(255, 255, 255, 0.06);
-    --color-focus: blue;
+    --color-focus: #fff;
 }
 
 body {
