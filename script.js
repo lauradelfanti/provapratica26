@@ -6,7 +6,7 @@ const supportsNavigation = 'popover' in HTMLElement.prototype &&
   CSS.supports('top', 'anchor(bottom)') &&
   CSS.supports('width', 'anchor-size(width)');
 
-// Scegliamo la modalitÃ  di navigazione al caricamento (il popover funziona giÃ  in HTML)
+// Scegliamo la modalità di navigazione al caricamento (il popover funziona già in HTML)
 function updateNavigationLabel() {
   const text = navigationPanel.matches(':popover-open') ? 'Chiudi menu' : 'Apri menu';
   navigationButton.setAttribute('aria-label', text);
@@ -28,7 +28,7 @@ if (supportsNavigation) {
   navigationPanel.addEventListener('toggle', updateNavigationLabel);
   updateNavigationLayout();
 } else {
-  // Qui si puÃ² eventualmente inserire un ripiego per i browser privi delle funzionalitÃ  richieste.
+  // Qui si può eventualmente inserire un ripiego per i browser privi delle funzionalità richieste.
   navigationButton.removeAttribute('popovertarget');
   navigationPanel.removeAttribute('popover');
   navigationButton.hidden = true;
@@ -47,7 +47,7 @@ document.querySelector('.skip-link').addEventListener('click', function () {
   document.querySelector('#top').focus();
 });
 
-// Bonus accessibilitÃ : se cambia il breakpoint, manteniamo il focus dove serve
+// Bonus accessibilità: se cambia il breakpoint, manteniamo il focus dove serve
 desktopMedia.addEventListener('change', function () {
   if (!supportsNavigation) return;
   const focused = document.activeElement;
@@ -59,16 +59,37 @@ desktopMedia.addEventListener('change', function () {
   else if (!desktopMedia.matches && focusInNavigation) navigationButton.focus();
 });
 
-function cambia(numero, titolo, testo) {
-  // togli "attivo" a tutti
-  document.getElementById("step1").classList.remove("attivo");
-  document.getElementById("step2").classList.remove("attivo");
-  document.getElementById("step3").classList.remove("attivo");
+/* ===== breakdownTabs: scegliere una voce e cambiare immagine ===== */
+const tabs = document.querySelector('.breakdownTabs');
 
-  // mettilo solo a quello cliccato
-  document.getElementById("step" + numero).classList.add("attivo");
+if (tabs) {
+  const tabItems = tabs.querySelectorAll('.breakdownTabs-item');
+  const tabButtons = tabs.querySelectorAll('.breakdownTabs-button');
+  const tabVisuals = tabs.querySelectorAll('.breakdownTabs-visual');
 
-  // cambia il contenuto dell'immagine
-  document.getElementById("preview-titolo").textContent = titolo;
-  document.getElementById("preview-testo").textContent = testo;
+  // Dice al CSS che JavaScript funziona
+  tabs.classList.add('breakdownTabs-ready');
+
+  // Voce e immagine con la stessa posizione vanno insieme
+  function selectTab(position) {
+    for (let i = 0; i < tabItems.length; i++) {
+      if (i === position) {
+        tabItems[i].classList.add('is-selected');
+        tabVisuals[i].classList.add('is-active');
+      } else {
+        tabItems[i].classList.remove('is-selected');
+        tabVisuals[i].classList.remove('is-active');
+      }
+    }
+  }
+
+  // All'avvio mostra la prima voce e la prima immagine
+  selectTab(0);
+
+  // Ogni pulsante passa la propria posizione
+  for (let i = 0; i < tabButtons.length; i++) {
+    tabButtons[i].addEventListener('click', function () {
+      selectTab(i);
+    });
+  }
 }
