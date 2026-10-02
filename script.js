@@ -1,3 +1,4 @@
+/* ===== Navigazione ===== */
 const navigationButton = document.querySelector('.navigation-toggle');
 const navigationLabel = document.querySelector('.navigation-label');
 const navigationPanel = document.querySelector('.navigation-panel');
@@ -6,48 +7,54 @@ const supportsNavigation = 'popover' in HTMLElement.prototype &&
   CSS.supports('top', 'anchor(bottom)') &&
   CSS.supports('width', 'anchor-size(width)');
 
-// Scegliamo la modalità di navigazione al caricamento (il popover funziona già in HTML)
+// Aggiorna il testo del pulsante in base allo stato del menu
 function updateNavigationLabel() {
-  const text = navigationPanel.matches(':popover-open') ? 'Chiudi menu' : 'Apri menu';
+  const text = navigationPanel.matches(':popover-open') ? 'Chiudi menu' : 'Menu dei capitoli';
   navigationButton.setAttribute('aria-label', text);
   navigationLabel.textContent = text;
 }
+
+// Su desktop il popover viene tolto e le voci vanno in linea; altrove viene riattivato
 function updateNavigationLayout() {
-  if (desktopMedia.matches) { // Siamo su desktop, disattiva il popover!
+  if (desktopMedia.matches) {
     navigationButton.removeAttribute('popovertarget');
     navigationPanel.removeAttribute('popover');
     navigationButton.hidden = true;
-  } else { // Non siamo su desktop, riattiva il popover!
+  } else {
     navigationPanel.setAttribute('popover', 'auto');
     navigationButton.setAttribute('popovertarget', navigationPanel.id);
     navigationButton.hidden = false;
   }
   updateNavigationLabel();
 }
+
 if (supportsNavigation) {
   navigationPanel.addEventListener('toggle', updateNavigationLabel);
   updateNavigationLayout();
 } else {
-  // Qui si può eventualmente inserire un ripiego per i browser privi delle funzionalità richieste.
+  // Ripiego per i browser senza le funzionalità richieste: menu sempre visibile
   navigationButton.removeAttribute('popovertarget');
   navigationPanel.removeAttribute('popover');
   navigationButton.hidden = true;
 }
 
-// Chiudiamo il popover se clicchiamo fuori (ad eccezione di alcuni casi) e lasciamo al link HTML la navigazione al capitolo
+// Chiude il popover quando si clicca un link e lascia all'HTML lo scorrimento alla sezione
 navigationPanel.addEventListener('click', function (event) {
   const link = event.target.closest('a[href^="#"]');
   if (!link || event.defaultPrevented || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
   const target = document.getElementById(link.hash.slice(1));
   if (!target) return;
-  if (supportsNavigation && navigationPanel.matches(':popover-open')) navigationPanel.hidePopover();
-  // Il link continua ad aggiornare il frammento e a scorrere con il comportamento HTML.
+  if (supportsNavigation && navigationPanel.matches(':popover-open')) {
+    navigationPanel.hidePopover();
+  }
 });
+
+// Il link "Vai al contenuto" sposta il focus sul contenuto principale
 document.querySelector('.skip-link').addEventListener('click', function () {
   document.querySelector('#top').focus();
 });
 
-// Bonus accessibilità: se cambia il breakpoint, manteniamo il focus dove serve
+// Se cambia il breakpoint, il focus resta dove serve
 desktopMedia.addEventListener('change', function () {
   if (!supportsNavigation) return;
   const focused = document.activeElement;
@@ -58,6 +65,7 @@ desktopMedia.addEventListener('change', function () {
   else if (desktopMedia.matches && focusOnButton) navigationPanel.querySelector('a').focus();
   else if (!desktopMedia.matches && focusInNavigation) navigationButton.focus();
 });
+
 
 /* ===== breakdownTabs: scegliere una voce e cambiare immagine ===== */
 const tabs = document.querySelector('.breakdownTabs');
@@ -70,16 +78,13 @@ if (tabs) {
   // Dice al CSS che JavaScript funziona
   tabs.classList.add('breakdownTabs-ready');
 
-  // Voce e immagine con la stessa posizione vanno insieme
+  // Voce, pulsante e immagine con la stessa posizione vanno insieme
   function selectTab(position) {
     for (let i = 0; i < tabItems.length; i++) {
-      if (i === position) {
-        tabItems[i].classList.add('is-selected');
-        tabVisuals[i].classList.add('is-active');
-      } else {
-        tabItems[i].classList.remove('is-selected');
-        tabVisuals[i].classList.remove('is-active');
-      }
+      const isSelected = i === position;
+      tabItems[i].classList.toggle('is-selected', isSelected);
+      tabButtons[i].setAttribute('aria-expanded', isSelected);
+      if (tabVisuals[i]) tabVisuals[i].classList.toggle('is-active', isSelected);
     }
   }
 
