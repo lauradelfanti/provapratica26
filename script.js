@@ -83,7 +83,6 @@ if (tabs) {
     for (let i = 0; i < tabItems.length; i++) {
       const isSelected = i === position;
       tabItems[i].classList.toggle('is-selected', isSelected);
-      tabButtons[i].setAttribute('aria-expanded', isSelected);
       if (tabVisuals[i]) tabVisuals[i].classList.toggle('is-active', isSelected);
     }
   }
