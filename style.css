@@ -802,37 +802,20 @@ body {
   height: auto;
 }
 
-/* Sitemap: mappa orizzontale su desktop, verticale su mobile */
-.sitemap-image-container .sitemap-image-desktop {
-  display: block;
-}
-
-.sitemap-image-container .sitemap-image-mobile {
+.sitemap-image.mobile{
   display: none;
 }
 
-/* Sotto i 999px: colonna con la mappa prima del testo */
 @media (max-width: 999px) {
-  .sitemap-image-container .sitemap-image-desktop {
+  .sitemap-image-desktop {
     display: none;
   }
-  .sitemap-image-container .sitemap-image-mobile {
+  .sitemap-image-mobile {
     display: block;
   }
-  .sitemap-content {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .sitemap-image-container {
-    order: -1;
-    flex: none;
-  }
-  .info-box {
-    flex: none;
-    min-width: 0;
-    padding: 32px 24px 40px;
-  }
 }
+
+
 
 /* Assets: sezione scura con logo e palette colori */
 .assets {
@@ -850,7 +833,7 @@ body {
 
 .assets-header {
   text-align: center;
-  max-width: 320px;
+  max-width: 360px;
   margin: 0 auto 40px;
   padding: 0 20px;
 }
@@ -868,12 +851,11 @@ body {
   margin: 0;
 }
 
+/* Riga: testo a sinistra, immagine a destra */
 .asset-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
-  max-width: var(--container-width);
-  margin: 0 auto;
 }
 
 .asset-text {
@@ -893,6 +875,7 @@ body {
   margin: 0;
 }
 
+/* Le immagini riempiono la colonna */
 .asset-row img {
   display: block;
   width: 100%;
@@ -900,11 +883,11 @@ body {
 }
 
 /* Palette: cinque colonne su desktop, due righe su mobile */
-.asset-row .palette-mobile {
+.img-palettecolori-mobile {
   display: none;
 }
 
-/* Sotto i 999px: colonna con l'immagine prima del testo */
+/* Sotto i 999px: una colonna, con l'immagine prima del testo */
 @media (max-width: 999px) {
   .asset-row {
     grid-template-columns: 1fr;
@@ -912,14 +895,14 @@ body {
   .asset-row > :not(.asset-text) {
     order: -1;
   }
-  .asset-row .palette-desktop {
-    display: none;
-  }
-  .asset-row .palette-mobile {
-    display: block;
-  }
   .asset-text {
     padding: 40px 24px;
+  }
+  .img-palettecolori-desktop {
+    display: none;
+  }
+  .img-palettecolori-mobile {
+    display: block;
   }
 }
 
